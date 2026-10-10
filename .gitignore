@@ -1,0 +1,102 @@
+# file-converter-dll
+A versatile file converter for .dll, .exe, .bin, .hex, .base64, and other binary formats.
+
+## Overview
+This project provides a lightweight but useful file conversion toolkit for Windows binary formats and generic binary data. It is designed for quick transformation, inspection, and metadata extraction of files such as DLLs, EXEs, BINs, HEX dumps, and raw binary payloads.
+
+## Features
+- Convert binary files to and from:
+  - `.bin`
+  - `.hex`
+  - `.base64`
+  - `.txt`
+  - `.json`
+- Inspect Windows PE binaries (`.dll`, `.exe`)
+- Extract PE metadata (machine, sections, exports, imports, architecture, etc.)
+- Detect common file types by magic bytes
+- CLI and optional desktop GUI
+- Unit-tested core conversion utilities
+
+## Quick start
+
+### Install
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+pip install -e .
+```
+
+### CLI usage
+```bash
+file-converter --help
+file-converter convert sample.dll --to hex --output sample.hex
+file-converter convert sample.bin --to base64 --output sample.b64
+file-converter inspect sample.dll
+file-converter list-formats
+```
+
+### Run without installation
+```bash
+PYTHONPATH=src python -m file_converter.cli --help
+PYTHONPATH=src python -m file_converter.cli convert sample.dll --to hex --output sample.hex
+PYTHONPATH=src python -m file_converter.cli inspect sample.dll
+```
+
+### GUI (optional)
+```bash
+PYTHONPATH=src python -m file_converter.gui
+```
+
+## Supported conversion targets
+- `bin`
+- `hex`
+- `base64`
+- `txt`
+- `json`
+- `dll` / `exe` metadata export is handled by inspection commands
+
+## Example: PE metadata extraction
+```bash
+file-converter inspect mylibrary.dll
+```
+This produces information similar to:
+```json
+{
+  "input": "mylibrary.dll",
+  "type": "windows_pe",
+  "machine": "AMD64",
+  "bits": 64,
+  "section_count": 6,
+  "export_count": 42,
+  "import_count": 18,
+  "sha256": "..."
+}
+```
+
+## Project layout
+```text
+.
+├── README.md
+├── pyproject.toml
+├── requirements.txt
+├── src/
+│   └── file_converter/
+│       ├── __init__.py
+│       ├── cli.py
+│       ├── converter.py
+│       ├── formats.py
+│       ├── gui.py
+│       ├── metadata.py
+│       └── utils.py
+└── tests/
+    └── test_converter.py
+```
+
+## Notes
+- This project is intentionally lightweight and does not require a heavy GUI framework.
+- For Windows PE metadata, the `pefile` dependency is used to read structure details from DLL and EXE files.
+- This tool does not decompile binaries or reverse engineer code; it focuses on conversion and metadata extraction.
+
+## License
+MIT
